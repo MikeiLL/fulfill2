@@ -1,0 +1,3605 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict DHT7gCPQSldT5SyOVdkCg7rLXh0fhJDLAjrkYCv9QBFIQYL51DV5J1hRFgFfhON
+
+-- Dumped from database version 15.14 (Homebrew)
+-- Dumped by pg_dump version 15.14 (Homebrew)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: mikekilmer
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO mikekilmer;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: account_emailaddress; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.account_emailaddress (
+    id integer NOT NULL,
+    email character varying(254) NOT NULL,
+    verified boolean NOT NULL,
+    "primary" boolean NOT NULL,
+    user_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.account_emailaddress OWNER TO fulfill;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.account_emailaddress_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailaddress_id_seq OWNER TO fulfill;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.account_emailaddress_id_seq OWNED BY public.account_emailaddress.id;
+
+
+--
+-- Name: account_emailconfirmation; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.account_emailconfirmation (
+    id integer NOT NULL,
+    created timestamp with time zone NOT NULL,
+    sent timestamp with time zone,
+    key character varying(64) NOT NULL,
+    email_address_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_emailconfirmation OWNER TO fulfill;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.account_emailconfirmation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailconfirmation_id_seq OWNER TO fulfill;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.account_emailconfirmation_id_seq OWNED BY public.account_emailconfirmation.id;
+
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO fulfill;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO fulfill;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO fulfill;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO fulfill;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO fulfill;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO fulfill;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- Name: core_client; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_client (
+    id bigint NOT NULL,
+    name character varying(50) NOT NULL,
+    email character varying(254),
+    hourly_rate smallint NOT NULL,
+    slug character varying(50),
+    balance numeric(8,2),
+    user_id bigint,
+    fulfillment_flat_fee numeric(5,2),
+    fulfillment_percent_fee smallint NOT NULL
+);
+
+
+ALTER TABLE public.core_client OWNER TO fulfill;
+
+--
+-- Name: core_client_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_client_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_client_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_client_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_client_id_seq OWNED BY public.core_client.id;
+
+
+--
+-- Name: core_clientchannelmap; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_clientchannelmap (
+    id bigint NOT NULL,
+    credentials jsonb,
+    channel_id bigint,
+    client_id bigint,
+    uuid uuid NOT NULL,
+    webhook_created boolean NOT NULL
+);
+
+
+ALTER TABLE public.core_clientchannelmap OWNER TO fulfill;
+
+--
+-- Name: core_clientchannelmap_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_clientchannelmap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_clientchannelmap_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_clientchannelmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_clientchannelmap_id_seq OWNED BY public.core_clientchannelmap.id;
+
+
+--
+-- Name: core_consumer; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_consumer (
+    id bigint NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.core_consumer OWNER TO fulfill;
+
+--
+-- Name: core_consumer_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_consumer_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_consumer_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_consumer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_consumer_id_seq OWNED BY public.core_consumer.id;
+
+
+--
+-- Name: core_fulfillment; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_fulfillment (
+    id bigint NOT NULL,
+    date timestamp with time zone NOT NULL,
+    product_fees numeric(6,2) NOT NULL,
+    client_id bigint,
+    consumer_id bigint,
+    paid boolean NOT NULL,
+    order_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.core_fulfillment OWNER TO fulfill;
+
+--
+-- Name: core_fulfillment_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_fulfillment_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_fulfillment_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_fulfillment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_fulfillment_id_seq OWNED BY public.core_fulfillment.id;
+
+
+--
+-- Name: core_fulfillmentmaterial; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_fulfillmentmaterial (
+    id bigint NOT NULL,
+    qty smallint NOT NULL,
+    fullfillment_id bigint NOT NULL,
+    material_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.core_fulfillmentmaterial OWNER TO fulfill;
+
+--
+-- Name: core_fulfillmentmaterial_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_fulfillmentmaterial_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_fulfillmentmaterial_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_fulfillmentmaterial_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_fulfillmentmaterial_id_seq OWNED BY public.core_fulfillmentmaterial.id;
+
+
+--
+-- Name: core_fulfillmentproduct; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_fulfillmentproduct (
+    id bigint NOT NULL,
+    qty smallint NOT NULL,
+    fulfillment_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    variant_id bigint,
+    CONSTRAINT core_productfulfillment_qty_check CHECK ((qty >= 0))
+);
+
+
+ALTER TABLE public.core_fulfillmentproduct OWNER TO fulfill;
+
+--
+-- Name: core_fulfillmentproduct_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_fulfillmentproduct_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_fulfillmentproduct_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_fulfillmentproduct_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_fulfillmentproduct_id_seq OWNED BY public.core_fulfillmentproduct.id;
+
+
+--
+-- Name: core_invoice; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_invoice (
+    id bigint NOT NULL,
+    date timestamp with time zone NOT NULL,
+    created timestamp with time zone NOT NULL,
+    modified timestamp with time zone NOT NULL,
+    paid boolean NOT NULL,
+    amount numeric(8,2),
+    client_id bigint
+);
+
+
+ALTER TABLE public.core_invoice OWNER TO fulfill;
+
+--
+-- Name: core_invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_invoice_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_invoice_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_invoice_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_invoice_id_seq OWNED BY public.core_invoice.id;
+
+
+--
+-- Name: core_invoiceitem; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_invoiceitem (
+    id bigint NOT NULL,
+    fulfillment_id bigint,
+    invoice_id bigint
+);
+
+
+ALTER TABLE public.core_invoiceitem OWNER TO fulfill;
+
+--
+-- Name: core_invoiceitem_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_invoiceitem_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_invoiceitem_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_invoiceitem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_invoiceitem_id_seq OWNED BY public.core_invoiceitem.id;
+
+
+--
+-- Name: core_invoiceitems_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_invoiceitems_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_invoiceitems_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_invoiceitems_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_invoiceitems_id_seq OWNED BY public.core_invoiceitem.id;
+
+
+--
+-- Name: core_material; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_material (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    rate_per_unit numeric(8,2),
+    unit character varying(100) NOT NULL,
+    notes text
+);
+
+
+ALTER TABLE public.core_material OWNER TO fulfill;
+
+--
+-- Name: core_material_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_material_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_material_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_material_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_material_id_seq OWNED BY public.core_material.id;
+
+
+--
+-- Name: core_order; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_order (
+    id bigint NOT NULL,
+    remote_id character varying(100),
+    created timestamp with time zone NOT NULL,
+    changed timestamp with time zone NOT NULL,
+    date timestamp with time zone NOT NULL,
+    channel_id bigint,
+    client_id bigint,
+    fulfilled boolean NOT NULL
+);
+
+
+ALTER TABLE public.core_order OWNER TO fulfill;
+
+--
+-- Name: core_order_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_order_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_order_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_order_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_order_id_seq OWNED BY public.core_order.id;
+
+
+--
+-- Name: core_orderproduct; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_orderproduct (
+    id bigint NOT NULL,
+    qty smallint NOT NULL,
+    order_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    variant_id bigint,
+    CONSTRAINT core_productorder_qty_check CHECK ((qty >= 0))
+);
+
+
+ALTER TABLE public.core_orderproduct OWNER TO fulfill;
+
+--
+-- Name: core_orderproduct_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_orderproduct_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_orderproduct_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_orderproduct_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_orderproduct_id_seq OWNED BY public.core_orderproduct.id;
+
+
+--
+-- Name: core_product; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_product (
+    id bigint NOT NULL,
+    name character varying(250) NOT NULL,
+    sku character varying(250) NOT NULL,
+    client_id bigint NOT NULL,
+    updated timestamp with time zone NOT NULL,
+    fee numeric(5,2) NOT NULL,
+    price numeric(7,2),
+    has_variants boolean NOT NULL,
+    tethered_product character varying(250),
+    notes text
+);
+
+
+ALTER TABLE public.core_product OWNER TO fulfill;
+
+--
+-- Name: core_product_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_product_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_product_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_product_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_product_id_seq OWNED BY public.core_product.id;
+
+
+--
+-- Name: core_productfulfillment_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_productfulfillment_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_productfulfillment_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_productfulfillment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_productfulfillment_id_seq OWNED BY public.core_fulfillmentproduct.id;
+
+
+--
+-- Name: core_productmap; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_productmap (
+    id bigint NOT NULL,
+    remote_id bigint NOT NULL,
+    channel_id bigint,
+    product_id bigint NOT NULL,
+    parent_id bigint,
+    CONSTRAINT core_productmap_remote_id_check CHECK ((remote_id >= 0))
+);
+
+
+ALTER TABLE public.core_productmap OWNER TO fulfill;
+
+--
+-- Name: core_productmap_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_productmap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_productmap_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_productmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_productmap_id_seq OWNED BY public.core_productmap.id;
+
+
+--
+-- Name: core_productorder_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_productorder_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_productorder_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_productorder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_productorder_id_seq OWNED BY public.core_orderproduct.id;
+
+
+--
+-- Name: core_productvariant; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_productvariant (
+    id bigint NOT NULL,
+    sku character varying(30),
+    product_id bigint,
+    variant_id bigint,
+    price numeric(7,2)
+);
+
+
+ALTER TABLE public.core_productvariant OWNER TO fulfill;
+
+--
+-- Name: core_productvariant_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_productvariant_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_productvariant_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_productvariant_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_productvariant_id_seq OWNED BY public.core_productvariant.id;
+
+
+--
+-- Name: core_productvariation_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_productvariation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_productvariation_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_productvariation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_productvariation_id_seq OWNED BY public.core_productvariant.id;
+
+
+--
+-- Name: core_saleschannel; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_saleschannel (
+    id bigint NOT NULL,
+    name character varying(50) NOT NULL,
+    provider character varying(20)
+);
+
+
+ALTER TABLE public.core_saleschannel OWNER TO fulfill;
+
+--
+-- Name: core_saleschannel_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_saleschannel_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_saleschannel_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_saleschannel_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_saleschannel_id_seq OWNED BY public.core_saleschannel.id;
+
+
+--
+-- Name: core_service; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_service (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    client_id bigint,
+    rate_per_unit numeric(8,2),
+    unit character varying(100),
+    notes text
+);
+
+
+ALTER TABLE public.core_service OWNER TO fulfill;
+
+--
+-- Name: core_service_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_service_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_service_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_service_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_service_id_seq OWNED BY public.core_service.id;
+
+
+--
+-- Name: core_servicing; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_servicing (
+    id bigint NOT NULL,
+    date timestamp with time zone NOT NULL,
+    units integer NOT NULL,
+    notes text,
+    client_id bigint NOT NULL,
+    service_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.core_servicing OWNER TO fulfill;
+
+--
+-- Name: core_servicing_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_servicing_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_servicing_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_servicing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_servicing_id_seq OWNED BY public.core_servicing.id;
+
+
+--
+-- Name: core_stock; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_stock (
+    id bigint NOT NULL,
+    qty smallint NOT NULL,
+    product_id bigint NOT NULL,
+    variant_id bigint,
+    scratch_and_dent boolean NOT NULL
+);
+
+
+ALTER TABLE public.core_stock OWNER TO fulfill;
+
+--
+-- Name: core_stock_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_stock_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_stock_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_stock_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_stock_id_seq OWNED BY public.core_stock.id;
+
+
+--
+-- Name: core_stockticket; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_stockticket (
+    id bigint NOT NULL,
+    qty smallint NOT NULL,
+    date timestamp with time zone NOT NULL,
+    date_created timestamp with time zone NOT NULL,
+    product_id bigint NOT NULL,
+    notes text,
+    created_by_id bigint,
+    variant_id bigint,
+    fulfillment_id bigint,
+    scratch_and_dent boolean NOT NULL,
+    convert_from_stock boolean NOT NULL
+);
+
+
+ALTER TABLE public.core_stockticket OWNER TO fulfill;
+
+--
+-- Name: core_stockticket_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_stockticket_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_stockticket_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_stockticket_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_stockticket_id_seq OWNED BY public.core_stockticket.id;
+
+
+--
+-- Name: core_variant; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_variant (
+    id bigint NOT NULL,
+    name character varying(80) NOT NULL,
+    client_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.core_variant OWNER TO fulfill;
+
+--
+-- Name: core_variant_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_variant_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_variant_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_variant_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_variant_id_seq OWNED BY public.core_variant.id;
+
+
+--
+-- Name: core_variantmap; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.core_variantmap (
+    id bigint NOT NULL,
+    remote_id bigint NOT NULL,
+    channel_id bigint,
+    variant_id bigint NOT NULL,
+    CONSTRAINT core_variantmap_remote_id_check CHECK ((remote_id >= 0))
+);
+
+
+ALTER TABLE public.core_variantmap OWNER TO fulfill;
+
+--
+-- Name: core_variantmap_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_variantmap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_variantmap_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_variantmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_variantmap_id_seq OWNED BY public.core_variantmap.id;
+
+
+--
+-- Name: core_variation_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.core_variation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_variation_id_seq OWNER TO fulfill;
+
+--
+-- Name: core_variation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.core_variation_id_seq OWNED BY public.core_variant.id;
+
+
+--
+-- Name: csvimport_csvimport; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvimport_csvimport (
+    id integer NOT NULL,
+    model_name character varying(255) NOT NULL,
+    field_list text NOT NULL,
+    upload_file character varying(100) NOT NULL,
+    file_name character varying(255) NOT NULL,
+    encoding character varying(32) NOT NULL,
+    upload_method character varying(50) NOT NULL,
+    error_log text NOT NULL,
+    import_date date NOT NULL,
+    import_user character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.csvimport_csvimport OWNER TO fulfill;
+
+--
+-- Name: csvimport_csvimport_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.csvimport_csvimport_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.csvimport_csvimport_id_seq OWNER TO fulfill;
+
+--
+-- Name: csvimport_csvimport_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.csvimport_csvimport_id_seq OWNED BY public.csvimport_csvimport.id;
+
+
+--
+-- Name: csvimport_importmodel; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvimport_importmodel (
+    id integer NOT NULL,
+    numeric_id integer NOT NULL,
+    natural_key character varying(100) NOT NULL,
+    csvimport_id integer NOT NULL,
+    CONSTRAINT csvimport_importmodel_numeric_id_check CHECK ((numeric_id >= 0))
+);
+
+
+ALTER TABLE public.csvimport_importmodel OWNER TO fulfill;
+
+--
+-- Name: csvimport_importmodel_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.csvimport_importmodel_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.csvimport_importmodel_id_seq OWNER TO fulfill;
+
+--
+-- Name: csvimport_importmodel_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.csvimport_importmodel_id_seq OWNED BY public.csvimport_importmodel.id;
+
+
+--
+-- Name: csvtests_country; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvtests_country (
+    code character varying(4) NOT NULL,
+    name character varying(255) NOT NULL,
+    latitude double precision,
+    longitude double precision,
+    alias character varying(255)
+);
+
+
+ALTER TABLE public.csvtests_country OWNER TO fulfill;
+
+--
+-- Name: csvtests_issue98; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvtests_issue98 (
+    co_id character varying(7) NOT NULL,
+    co_role character varying(16),
+    co_level integer,
+    co_region character varying(16),
+    tm_role character varying(16),
+    tm_level numeric(3,1),
+    tm_region character varying(16),
+    co_salary_low character varying(8) NOT NULL,
+    co_salary_mid character varying(8) NOT NULL,
+    co_salary_high character varying(8) NOT NULL,
+    co_equity_low character varying(8) NOT NULL,
+    co_equity_mid character varying(8) NOT NULL,
+    co_equity_high character varying(8) NOT NULL,
+    co_bonus_low character varying(3) NOT NULL,
+    co_bonus_mid character varying(3) NOT NULL,
+    co_bonus_high character varying(3) NOT NULL,
+    co_total_comp_low character varying(8) NOT NULL,
+    co_total_comp_mid character varying(8) NOT NULL,
+    co_total_comp_high character varying(8) NOT NULL
+);
+
+
+ALTER TABLE public.csvtests_issue98 OWNER TO fulfill;
+
+--
+-- Name: csvtests_item; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvtests_item (
+    id integer NOT NULL,
+    "TYPE" integer NOT NULL,
+    code_share character varying(32) NOT NULL,
+    code_org character varying(32) NOT NULL,
+    description text,
+    quantity integer NOT NULL,
+    status character varying(10),
+    date date,
+    country_id character varying(4),
+    organisation_id integer NOT NULL,
+    uom_id integer NOT NULL,
+    CONSTRAINT "csvtests_item_TYPE_check" CHECK (("TYPE" >= 0)),
+    CONSTRAINT csvtests_item_quantity_check CHECK ((quantity >= 0))
+);
+
+
+ALTER TABLE public.csvtests_item OWNER TO fulfill;
+
+--
+-- Name: csvtests_item_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.csvtests_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.csvtests_item_id_seq OWNER TO fulfill;
+
+--
+-- Name: csvtests_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.csvtests_item_id_seq OWNED BY public.csvtests_item.id;
+
+
+--
+-- Name: csvtests_organisation; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvtests_organisation (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.csvtests_organisation OWNER TO fulfill;
+
+--
+-- Name: csvtests_organisation_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.csvtests_organisation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.csvtests_organisation_id_seq OWNER TO fulfill;
+
+--
+-- Name: csvtests_organisation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.csvtests_organisation_id_seq OWNED BY public.csvtests_organisation.id;
+
+
+--
+-- Name: csvtests_unitofmeasure; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.csvtests_unitofmeasure (
+    id integer NOT NULL,
+    name character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.csvtests_unitofmeasure OWNER TO fulfill;
+
+--
+-- Name: csvtests_unitofmeasure_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.csvtests_unitofmeasure_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.csvtests_unitofmeasure_id_seq OWNER TO fulfill;
+
+--
+-- Name: csvtests_unitofmeasure_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.csvtests_unitofmeasure_id_seq OWNED BY public.csvtests_unitofmeasure.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id bigint NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO fulfill;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO fulfill;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO fulfill;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO fulfill;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO fulfill;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO fulfill;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO fulfill;
+
+--
+-- Name: django_site; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.django_site (
+    id integer NOT NULL,
+    domain character varying(100) NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.django_site OWNER TO fulfill;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.django_site_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_site_id_seq OWNER TO fulfill;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.django_site_id_seq OWNED BY public.django_site.id;
+
+
+--
+-- Name: integrations_request; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.integrations_request (
+    id bigint NOT NULL,
+    date timestamp with time zone NOT NULL,
+    body text NOT NULL,
+    url character varying(200) NOT NULL,
+    processed boolean NOT NULL,
+    headers jsonb,
+    eligible boolean NOT NULL,
+    order_id bigint
+);
+
+
+ALTER TABLE public.integrations_request OWNER TO fulfill;
+
+--
+-- Name: integrations_request_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.integrations_request_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.integrations_request_id_seq OWNER TO fulfill;
+
+--
+-- Name: integrations_request_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.integrations_request_id_seq OWNED BY public.integrations_request.id;
+
+
+--
+-- Name: socialaccount_socialaccount; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.socialaccount_socialaccount (
+    id integer NOT NULL,
+    provider character varying(30) NOT NULL,
+    uid character varying(191) NOT NULL,
+    last_login timestamp with time zone NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    extra_data text NOT NULL,
+    user_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialaccount OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialaccount_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.socialaccount_socialaccount_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialaccount_id_seq OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialaccount_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.socialaccount_socialaccount_id_seq OWNED BY public.socialaccount_socialaccount.id;
+
+
+--
+-- Name: socialaccount_socialapp; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.socialaccount_socialapp (
+    id integer NOT NULL,
+    provider character varying(30) NOT NULL,
+    name character varying(40) NOT NULL,
+    client_id character varying(191) NOT NULL,
+    secret character varying(191) NOT NULL,
+    key character varying(191) NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialapp OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialapp_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.socialaccount_socialapp_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialapp_id_seq OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.socialaccount_socialapp_id_seq OWNED BY public.socialaccount_socialapp.id;
+
+
+--
+-- Name: socialaccount_socialapp_sites; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.socialaccount_socialapp_sites (
+    id integer NOT NULL,
+    socialapp_id integer NOT NULL,
+    site_id integer NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialapp_sites OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialapp_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.socialaccount_socialapp_sites_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialapp_sites_id_seq OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialapp_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.socialaccount_socialapp_sites_id_seq OWNED BY public.socialaccount_socialapp_sites.id;
+
+
+--
+-- Name: socialaccount_socialtoken; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.socialaccount_socialtoken (
+    id integer NOT NULL,
+    token text NOT NULL,
+    token_secret text NOT NULL,
+    expires_at timestamp with time zone,
+    account_id integer NOT NULL,
+    app_id integer NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialtoken OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialtoken_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.socialaccount_socialtoken_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialtoken_id_seq OWNER TO fulfill;
+
+--
+-- Name: socialaccount_socialtoken_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.socialaccount_socialtoken_id_seq OWNED BY public.socialaccount_socialtoken.id;
+
+
+--
+-- Name: users_user; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.users_user (
+    id bigint NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.users_user OWNER TO fulfill;
+
+--
+-- Name: users_user_groups; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.users_user_groups (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.users_user_groups OWNER TO fulfill;
+
+--
+-- Name: users_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.users_user_groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_groups_id_seq OWNER TO fulfill;
+
+--
+-- Name: users_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.users_user_groups_id_seq OWNED BY public.users_user_groups.id;
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_id_seq OWNER TO fulfill;
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users_user.id;
+
+
+--
+-- Name: users_user_user_permissions; Type: TABLE; Schema: public; Owner: fulfill
+--
+
+CREATE TABLE public.users_user_user_permissions (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.users_user_user_permissions OWNER TO fulfill;
+
+--
+-- Name: users_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: fulfill
+--
+
+CREATE SEQUENCE public.users_user_user_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_user_user_permissions_id_seq OWNER TO fulfill;
+
+--
+-- Name: users_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fulfill
+--
+
+ALTER SEQUENCE public.users_user_user_permissions_id_seq OWNED BY public.users_user_user_permissions.id;
+
+
+--
+-- Name: account_emailaddress id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailaddress ALTER COLUMN id SET DEFAULT nextval('public.account_emailaddress_id_seq'::regclass);
+
+
+--
+-- Name: account_emailconfirmation id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation ALTER COLUMN id SET DEFAULT nextval('public.account_emailconfirmation_id_seq'::regclass);
+
+
+--
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- Name: core_client id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_client ALTER COLUMN id SET DEFAULT nextval('public.core_client_id_seq'::regclass);
+
+
+--
+-- Name: core_clientchannelmap id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_clientchannelmap ALTER COLUMN id SET DEFAULT nextval('public.core_clientchannelmap_id_seq'::regclass);
+
+
+--
+-- Name: core_consumer id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_consumer ALTER COLUMN id SET DEFAULT nextval('public.core_consumer_id_seq'::regclass);
+
+
+--
+-- Name: core_fulfillment id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment ALTER COLUMN id SET DEFAULT nextval('public.core_fulfillment_id_seq'::regclass);
+
+
+--
+-- Name: core_fulfillmentmaterial id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentmaterial ALTER COLUMN id SET DEFAULT nextval('public.core_fulfillmentmaterial_id_seq'::regclass);
+
+
+--
+-- Name: core_fulfillmentproduct id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentproduct ALTER COLUMN id SET DEFAULT nextval('public.core_fulfillmentproduct_id_seq'::regclass);
+
+
+--
+-- Name: core_invoice id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoice ALTER COLUMN id SET DEFAULT nextval('public.core_invoice_id_seq'::regclass);
+
+
+--
+-- Name: core_invoiceitem id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoiceitem ALTER COLUMN id SET DEFAULT nextval('public.core_invoiceitem_id_seq'::regclass);
+
+
+--
+-- Name: core_material id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_material ALTER COLUMN id SET DEFAULT nextval('public.core_material_id_seq'::regclass);
+
+
+--
+-- Name: core_order id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_order ALTER COLUMN id SET DEFAULT nextval('public.core_order_id_seq'::regclass);
+
+
+--
+-- Name: core_orderproduct id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_orderproduct ALTER COLUMN id SET DEFAULT nextval('public.core_orderproduct_id_seq'::regclass);
+
+
+--
+-- Name: core_product id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_product ALTER COLUMN id SET DEFAULT nextval('public.core_product_id_seq'::regclass);
+
+
+--
+-- Name: core_productmap id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap ALTER COLUMN id SET DEFAULT nextval('public.core_productmap_id_seq'::regclass);
+
+
+--
+-- Name: core_productvariant id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productvariant ALTER COLUMN id SET DEFAULT nextval('public.core_productvariant_id_seq'::regclass);
+
+
+--
+-- Name: core_saleschannel id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_saleschannel ALTER COLUMN id SET DEFAULT nextval('public.core_saleschannel_id_seq'::regclass);
+
+
+--
+-- Name: core_service id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_service ALTER COLUMN id SET DEFAULT nextval('public.core_service_id_seq'::regclass);
+
+
+--
+-- Name: core_servicing id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_servicing ALTER COLUMN id SET DEFAULT nextval('public.core_servicing_id_seq'::regclass);
+
+
+--
+-- Name: core_stock id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stock ALTER COLUMN id SET DEFAULT nextval('public.core_stock_id_seq'::regclass);
+
+
+--
+-- Name: core_stockticket id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket ALTER COLUMN id SET DEFAULT nextval('public.core_stockticket_id_seq'::regclass);
+
+
+--
+-- Name: core_variant id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variant ALTER COLUMN id SET DEFAULT nextval('public.core_variant_id_seq'::regclass);
+
+
+--
+-- Name: core_variantmap id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variantmap ALTER COLUMN id SET DEFAULT nextval('public.core_variantmap_id_seq'::regclass);
+
+
+--
+-- Name: csvimport_csvimport id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvimport_csvimport ALTER COLUMN id SET DEFAULT nextval('public.csvimport_csvimport_id_seq'::regclass);
+
+
+--
+-- Name: csvimport_importmodel id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvimport_importmodel ALTER COLUMN id SET DEFAULT nextval('public.csvimport_importmodel_id_seq'::regclass);
+
+
+--
+-- Name: csvtests_item id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_item ALTER COLUMN id SET DEFAULT nextval('public.csvtests_item_id_seq'::regclass);
+
+
+--
+-- Name: csvtests_organisation id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_organisation ALTER COLUMN id SET DEFAULT nextval('public.csvtests_organisation_id_seq'::regclass);
+
+
+--
+-- Name: csvtests_unitofmeasure id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_unitofmeasure ALTER COLUMN id SET DEFAULT nextval('public.csvtests_unitofmeasure_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: django_site id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_site ALTER COLUMN id SET DEFAULT nextval('public.django_site_id_seq'::regclass);
+
+
+--
+-- Name: integrations_request id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.integrations_request ALTER COLUMN id SET DEFAULT nextval('public.integrations_request_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialaccount id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialaccount_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialapp id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialapp_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialapp_sites id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialapp_sites_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialtoken id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialtoken_id_seq'::regclass);
+
+
+--
+-- Name: users_user id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user ALTER COLUMN id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Name: users_user_groups id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_groups ALTER COLUMN id SET DEFAULT nextval('public.users_user_groups_id_seq'::regclass);
+
+
+--
+-- Name: users_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.users_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_email_key; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_email_key UNIQUE (email);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_key_key; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_key_key UNIQUE (key);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_client core_client_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_client
+    ADD CONSTRAINT core_client_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_clientchannelmap core_clientchannelmap_client_id_channel_id_c5becd5b_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_clientchannelmap
+    ADD CONSTRAINT core_clientchannelmap_client_id_channel_id_c5becd5b_uniq UNIQUE (client_id, channel_id);
+
+
+--
+-- Name: core_clientchannelmap core_clientchannelmap_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_clientchannelmap
+    ADD CONSTRAINT core_clientchannelmap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_consumer core_consumer_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_consumer
+    ADD CONSTRAINT core_consumer_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_fulfillment core_fulfillment_order_id_d772d656_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment
+    ADD CONSTRAINT core_fulfillment_order_id_d772d656_uniq UNIQUE (order_id);
+
+
+--
+-- Name: core_fulfillment core_fulfillment_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment
+    ADD CONSTRAINT core_fulfillment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_fulfillmentmaterial core_fulfillmentmaterial_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentmaterial
+    ADD CONSTRAINT core_fulfillmentmaterial_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_invoice core_invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoice
+    ADD CONSTRAINT core_invoice_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_invoiceitem core_invoiceitems_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoiceitem
+    ADD CONSTRAINT core_invoiceitems_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_material core_material_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_material
+    ADD CONSTRAINT core_material_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_order core_order_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_order
+    ADD CONSTRAINT core_order_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_product core_product_client_id_sku_bde7b6d7_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_product
+    ADD CONSTRAINT core_product_client_id_sku_bde7b6d7_uniq UNIQUE (client_id, sku);
+
+
+--
+-- Name: core_product core_product_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_product
+    ADD CONSTRAINT core_product_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_fulfillmentproduct core_productfulfillment_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentproduct
+    ADD CONSTRAINT core_productfulfillment_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_productmap core_productmap_channel_id_remote_id_8d041702_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap
+    ADD CONSTRAINT core_productmap_channel_id_remote_id_8d041702_uniq UNIQUE (channel_id, remote_id);
+
+
+--
+-- Name: core_productmap core_productmap_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap
+    ADD CONSTRAINT core_productmap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_orderproduct core_productorder_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_orderproduct
+    ADD CONSTRAINT core_productorder_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_productvariant core_productvariation_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productvariant
+    ADD CONSTRAINT core_productvariation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_productvariant core_productvariation_product_id_variation_id_a5427c7e_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productvariant
+    ADD CONSTRAINT core_productvariation_product_id_variation_id_a5427c7e_uniq UNIQUE (product_id, variant_id);
+
+
+--
+-- Name: core_saleschannel core_saleschannel_name_32378867_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_saleschannel
+    ADD CONSTRAINT core_saleschannel_name_32378867_uniq UNIQUE (name);
+
+
+--
+-- Name: core_saleschannel core_saleschannel_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_saleschannel
+    ADD CONSTRAINT core_saleschannel_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_saleschannel core_saleschannel_provider_c87c3623_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_saleschannel
+    ADD CONSTRAINT core_saleschannel_provider_c87c3623_uniq UNIQUE (provider);
+
+
+--
+-- Name: core_service core_service_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_service
+    ADD CONSTRAINT core_service_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_servicing core_servicing_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_servicing
+    ADD CONSTRAINT core_servicing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_stock core_stock_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stock
+    ADD CONSTRAINT core_stock_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_stock core_stock_scratch_and_dent_variant_id_49f6f26d_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stock
+    ADD CONSTRAINT core_stock_scratch_and_dent_variant_id_49f6f26d_uniq UNIQUE (scratch_and_dent, variant_id);
+
+
+--
+-- Name: core_stockticket core_stockticket_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket
+    ADD CONSTRAINT core_stockticket_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_variantmap core_variantmap_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variantmap
+    ADD CONSTRAINT core_variantmap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_variant core_variation_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variant
+    ADD CONSTRAINT core_variation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csvimport_csvimport csvimport_csvimport_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvimport_csvimport
+    ADD CONSTRAINT csvimport_csvimport_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csvimport_importmodel csvimport_importmodel_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvimport_importmodel
+    ADD CONSTRAINT csvimport_importmodel_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csvtests_country csvtests_country_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_country
+    ADD CONSTRAINT csvtests_country_pkey PRIMARY KEY (code);
+
+
+--
+-- Name: csvtests_issue98 csvtests_issue98_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_issue98
+    ADD CONSTRAINT csvtests_issue98_pkey PRIMARY KEY (co_id);
+
+
+--
+-- Name: csvtests_item csvtests_item_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_item
+    ADD CONSTRAINT csvtests_item_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csvtests_organisation csvtests_organisation_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_organisation
+    ADD CONSTRAINT csvtests_organisation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: csvtests_unitofmeasure csvtests_unitofmeasure_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_unitofmeasure
+    ADD CONSTRAINT csvtests_unitofmeasure_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: django_site django_site_domain_a2e37b91_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_domain_a2e37b91_uniq UNIQUE (domain);
+
+
+--
+-- Name: django_site django_site_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: integrations_request integrations_request_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.integrations_request
+    ADD CONSTRAINT integrations_request_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_provider_uid_fc810c6e_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_provider_uid_fc810c6e_uniq UNIQUE (provider, uid);
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_socialapp__socialapp_id_site_id_71a9a768_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_socialapp__socialapp_id_site_id_71a9a768_uniq UNIQUE (socialapp_id, site_id);
+
+
+--
+-- Name: socialaccount_socialapp socialaccount_socialapp_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp
+    ADD CONSTRAINT socialaccount_socialapp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_socialapp_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_socialapp_sites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq UNIQUE (app_id, account_id);
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_socialtoken_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_socialtoken_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_user_groups users_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_groups
+    ADD CONSTRAINT users_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_user_groups users_user_groups_user_id_group_id_b88eab82_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_groups
+    ADD CONSTRAINT users_user_groups_user_id_group_id_b88eab82_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: users_user users_user_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user
+    ADD CONSTRAINT users_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_user_user_permissions users_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_user_permissions
+    ADD CONSTRAINT users_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_user_user_permissions users_user_user_permissions_user_id_permission_id_43338c45_uniq; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_user_permissions
+    ADD CONSTRAINT users_user_user_permissions_user_id_permission_id_43338c45_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: users_user users_user_username_key; Type: CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user
+    ADD CONSTRAINT users_user_username_key UNIQUE (username);
+
+
+--
+-- Name: account_emailaddress_email_03be32b2_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX account_emailaddress_email_03be32b2_like ON public.account_emailaddress USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: account_emailaddress_user_id_2c513194; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX account_emailaddress_user_id_2c513194 ON public.account_emailaddress USING btree (user_id);
+
+
+--
+-- Name: account_emailconfirmation_email_address_id_5b7f8c58; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX account_emailconfirmation_email_address_id_5b7f8c58 ON public.account_emailconfirmation USING btree (email_address_id);
+
+
+--
+-- Name: account_emailconfirmation_key_f43612bd_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX account_emailconfirmation_key_f43612bd_like ON public.account_emailconfirmation USING btree (key varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: core_client_slug_40c22521; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_client_slug_40c22521 ON public.core_client USING btree (slug);
+
+
+--
+-- Name: core_client_slug_40c22521_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_client_slug_40c22521_like ON public.core_client USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: core_client_user_id_49f31882; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_client_user_id_49f31882 ON public.core_client USING btree (user_id);
+
+
+--
+-- Name: core_clientchannelmap_channel_id_40158be9; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_clientchannelmap_channel_id_40158be9 ON public.core_clientchannelmap USING btree (channel_id);
+
+
+--
+-- Name: core_clientchannelmap_client_id_e1ad3e1f; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_clientchannelmap_client_id_e1ad3e1f ON public.core_clientchannelmap USING btree (client_id);
+
+
+--
+-- Name: core_fulfillment_client_id_4de6f10f; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_fulfillment_client_id_4de6f10f ON public.core_fulfillment USING btree (client_id);
+
+
+--
+-- Name: core_fulfillment_consumer_id_461f5846; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_fulfillment_consumer_id_461f5846 ON public.core_fulfillment USING btree (consumer_id);
+
+
+--
+-- Name: core_fulfillmentmaterial_fullfillment_id_3739b578; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_fulfillmentmaterial_fullfillment_id_3739b578 ON public.core_fulfillmentmaterial USING btree (fullfillment_id);
+
+
+--
+-- Name: core_fulfillmentmaterial_material_id_20972b71; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_fulfillmentmaterial_material_id_20972b71 ON public.core_fulfillmentmaterial USING btree (material_id);
+
+
+--
+-- Name: core_invoice_client_id_5b95bdaf; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_invoice_client_id_5b95bdaf ON public.core_invoice USING btree (client_id);
+
+
+--
+-- Name: core_invoiceitems_fulfillment_id_ca2b1c51; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_invoiceitems_fulfillment_id_ca2b1c51 ON public.core_invoiceitem USING btree (fulfillment_id);
+
+
+--
+-- Name: core_invoiceitems_invoice_id_d8b04ab9; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_invoiceitems_invoice_id_d8b04ab9 ON public.core_invoiceitem USING btree (invoice_id);
+
+
+--
+-- Name: core_order_channel_id_119898c7; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_order_channel_id_119898c7 ON public.core_order USING btree (channel_id);
+
+
+--
+-- Name: core_order_client_id_ef19d999; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_order_client_id_ef19d999 ON public.core_order USING btree (client_id);
+
+
+--
+-- Name: core_product_client_id_66d34905; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_product_client_id_66d34905 ON public.core_product USING btree (client_id);
+
+
+--
+-- Name: core_productfulfillment_fulfillment_id_0de162ad; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productfulfillment_fulfillment_id_0de162ad ON public.core_fulfillmentproduct USING btree (fulfillment_id);
+
+
+--
+-- Name: core_productfulfillment_product_id_5a207b00; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productfulfillment_product_id_5a207b00 ON public.core_fulfillmentproduct USING btree (product_id);
+
+
+--
+-- Name: core_productfulfillment_variation_id_1076ad7b; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productfulfillment_variation_id_1076ad7b ON public.core_fulfillmentproduct USING btree (variant_id);
+
+
+--
+-- Name: core_productmap_channel_id_2cd1f3e8; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productmap_channel_id_2cd1f3e8 ON public.core_productmap USING btree (channel_id);
+
+
+--
+-- Name: core_productmap_parent_id_0640c384; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productmap_parent_id_0640c384 ON public.core_productmap USING btree (parent_id);
+
+
+--
+-- Name: core_productmap_product_id_928ac4ff; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productmap_product_id_928ac4ff ON public.core_productmap USING btree (product_id);
+
+
+--
+-- Name: core_productorder_order_id_5df98e8c; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productorder_order_id_5df98e8c ON public.core_orderproduct USING btree (order_id);
+
+
+--
+-- Name: core_productorder_product_id_aa75e690; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productorder_product_id_aa75e690 ON public.core_orderproduct USING btree (product_id);
+
+
+--
+-- Name: core_productorder_variation_id_793a2dbe; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productorder_variation_id_793a2dbe ON public.core_orderproduct USING btree (variant_id);
+
+
+--
+-- Name: core_productvariation_product_id_dc930ce4; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productvariation_product_id_dc930ce4 ON public.core_productvariant USING btree (product_id);
+
+
+--
+-- Name: core_productvariation_variation_id_f18bf6d5; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_productvariation_variation_id_f18bf6d5 ON public.core_productvariant USING btree (variant_id);
+
+
+--
+-- Name: core_saleschannel_name_32378867_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_saleschannel_name_32378867_like ON public.core_saleschannel USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: core_saleschannel_provider_c87c3623_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_saleschannel_provider_c87c3623_like ON public.core_saleschannel USING btree (provider varchar_pattern_ops);
+
+
+--
+-- Name: core_service_client_id_10658d86; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_service_client_id_10658d86 ON public.core_service USING btree (client_id);
+
+
+--
+-- Name: core_servicing_client_id_23a68573; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_servicing_client_id_23a68573 ON public.core_servicing USING btree (client_id);
+
+
+--
+-- Name: core_servicing_service_id_be8cafbf; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_servicing_service_id_be8cafbf ON public.core_servicing USING btree (service_id);
+
+
+--
+-- Name: core_stock_product_id_361ed3d2; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stock_product_id_361ed3d2 ON public.core_stock USING btree (product_id);
+
+
+--
+-- Name: core_stock_variant_id_96338eb9; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stock_variant_id_96338eb9 ON public.core_stock USING btree (variant_id);
+
+
+--
+-- Name: core_stockticket_created_by_id_02b9a108; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stockticket_created_by_id_02b9a108 ON public.core_stockticket USING btree (created_by_id);
+
+
+--
+-- Name: core_stockticket_fulfillment_id_19ac2d86; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stockticket_fulfillment_id_19ac2d86 ON public.core_stockticket USING btree (fulfillment_id);
+
+
+--
+-- Name: core_stockticket_product_id_190709c4; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stockticket_product_id_190709c4 ON public.core_stockticket USING btree (product_id);
+
+
+--
+-- Name: core_stockticket_variation_id_8fd0277b; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_stockticket_variation_id_8fd0277b ON public.core_stockticket USING btree (variant_id);
+
+
+--
+-- Name: core_variantmap_channel_id_5c1eab38; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_variantmap_channel_id_5c1eab38 ON public.core_variantmap USING btree (channel_id);
+
+
+--
+-- Name: core_variantmap_variant_id_725685e0; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_variantmap_variant_id_725685e0 ON public.core_variantmap USING btree (variant_id);
+
+
+--
+-- Name: core_variation_client_id_97aef82d; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX core_variation_client_id_97aef82d ON public.core_variant USING btree (client_id);
+
+
+--
+-- Name: csvimport_importmodel_csvimport_id_5a422b1c; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvimport_importmodel_csvimport_id_5a422b1c ON public.csvimport_importmodel USING btree (csvimport_id);
+
+
+--
+-- Name: csvtests_country_code_1dee97cd_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_country_code_1dee97cd_like ON public.csvtests_country USING btree (code varchar_pattern_ops);
+
+
+--
+-- Name: csvtests_issue98_co_id_89794c4e_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_issue98_co_id_89794c4e_like ON public.csvtests_issue98 USING btree (co_id varchar_pattern_ops);
+
+
+--
+-- Name: csvtests_item_country_id_5f8b06b9; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_item_country_id_5f8b06b9 ON public.csvtests_item USING btree (country_id);
+
+
+--
+-- Name: csvtests_item_country_id_5f8b06b9_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_item_country_id_5f8b06b9_like ON public.csvtests_item USING btree (country_id varchar_pattern_ops);
+
+
+--
+-- Name: csvtests_item_organisation_id_b8e10ef5; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_item_organisation_id_b8e10ef5 ON public.csvtests_item USING btree (organisation_id);
+
+
+--
+-- Name: csvtests_item_uom_id_e4b75b66; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX csvtests_item_uom_id_e4b75b66 ON public.csvtests_item USING btree (uom_id);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: django_site_domain_a2e37b91_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX django_site_domain_a2e37b91_like ON public.django_site USING btree (domain varchar_pattern_ops);
+
+
+--
+-- Name: integrations_request_order_id_f9361c6c; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX integrations_request_order_id_f9361c6c ON public.integrations_request USING btree (order_id);
+
+
+--
+-- Name: socialaccount_socialaccount_user_id_8146e70c; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX socialaccount_socialaccount_user_id_8146e70c ON public.socialaccount_socialaccount USING btree (user_id);
+
+
+--
+-- Name: socialaccount_socialapp_sites_site_id_2579dee5; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX socialaccount_socialapp_sites_site_id_2579dee5 ON public.socialaccount_socialapp_sites USING btree (site_id);
+
+
+--
+-- Name: socialaccount_socialapp_sites_socialapp_id_97fb6e7d; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX socialaccount_socialapp_sites_socialapp_id_97fb6e7d ON public.socialaccount_socialapp_sites USING btree (socialapp_id);
+
+
+--
+-- Name: socialaccount_socialtoken_account_id_951f210e; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX socialaccount_socialtoken_account_id_951f210e ON public.socialaccount_socialtoken USING btree (account_id);
+
+
+--
+-- Name: socialaccount_socialtoken_app_id_636a42d7; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX socialaccount_socialtoken_app_id_636a42d7 ON public.socialaccount_socialtoken USING btree (app_id);
+
+
+--
+-- Name: users_user_groups_group_id_9afc8d0e; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX users_user_groups_group_id_9afc8d0e ON public.users_user_groups USING btree (group_id);
+
+
+--
+-- Name: users_user_groups_user_id_5f6f5a90; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX users_user_groups_user_id_5f6f5a90 ON public.users_user_groups USING btree (user_id);
+
+
+--
+-- Name: users_user_user_permissions_permission_id_0b93982e; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX users_user_user_permissions_permission_id_0b93982e ON public.users_user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: users_user_user_permissions_user_id_20aca447; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX users_user_user_permissions_user_id_20aca447 ON public.users_user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: users_user_username_06e46fe6_like; Type: INDEX; Schema: public; Owner: fulfill
+--
+
+CREATE INDEX users_user_username_06e46fe6_like ON public.users_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_user_id_2c513194_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_user_id_2c513194_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirm_email_address_id_5b7f8c58_fk_account_e; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirm_email_address_id_5b7f8c58_fk_account_e FOREIGN KEY (email_address_id) REFERENCES public.account_emailaddress(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_client core_client_user_id_49f31882_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_client
+    ADD CONSTRAINT core_client_user_id_49f31882_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_clientchannelmap core_clientchannelmap_channel_id_40158be9_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_clientchannelmap
+    ADD CONSTRAINT core_clientchannelmap_channel_id_40158be9_fk FOREIGN KEY (channel_id) REFERENCES public.core_saleschannel(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_clientchannelmap core_clientchannelmap_client_id_e1ad3e1f_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_clientchannelmap
+    ADD CONSTRAINT core_clientchannelmap_client_id_e1ad3e1f_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillment core_fulfillment_client_id_4de6f10f_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment
+    ADD CONSTRAINT core_fulfillment_client_id_4de6f10f_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillment core_fulfillment_consumer_id_461f5846_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment
+    ADD CONSTRAINT core_fulfillment_consumer_id_461f5846_fk FOREIGN KEY (consumer_id) REFERENCES public.core_consumer(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillment core_fulfillment_order_id_d772d656_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillment
+    ADD CONSTRAINT core_fulfillment_order_id_d772d656_fk FOREIGN KEY (order_id) REFERENCES public.core_order(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillmentmaterial core_fulfillmentmaterial_fullfillment_id_3739b578_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentmaterial
+    ADD CONSTRAINT core_fulfillmentmaterial_fullfillment_id_3739b578_fk FOREIGN KEY (fullfillment_id) REFERENCES public.core_fulfillment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillmentmaterial core_fulfillmentmaterial_material_id_20972b71_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentmaterial
+    ADD CONSTRAINT core_fulfillmentmaterial_material_id_20972b71_fk FOREIGN KEY (material_id) REFERENCES public.core_material(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillmentproduct core_fulfillmentproduct_fulfillment_id_c8d93d76_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentproduct
+    ADD CONSTRAINT core_fulfillmentproduct_fulfillment_id_c8d93d76_fk FOREIGN KEY (fulfillment_id) REFERENCES public.core_fulfillment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillmentproduct core_fulfillmentproduct_product_id_27363145_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentproduct
+    ADD CONSTRAINT core_fulfillmentproduct_product_id_27363145_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_fulfillmentproduct core_fulfillmentproduct_variant_id_6fa3718a_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_fulfillmentproduct
+    ADD CONSTRAINT core_fulfillmentproduct_variant_id_6fa3718a_fk FOREIGN KEY (variant_id) REFERENCES public.core_productvariant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_invoice core_invoice_client_id_5b95bdaf_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoice
+    ADD CONSTRAINT core_invoice_client_id_5b95bdaf_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_invoiceitem core_invoiceitem_fulfillment_id_22331df3_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoiceitem
+    ADD CONSTRAINT core_invoiceitem_fulfillment_id_22331df3_fk FOREIGN KEY (fulfillment_id) REFERENCES public.core_fulfillment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_invoiceitem core_invoiceitem_invoice_id_ed095f3b_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_invoiceitem
+    ADD CONSTRAINT core_invoiceitem_invoice_id_ed095f3b_fk FOREIGN KEY (invoice_id) REFERENCES public.core_invoice(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_order core_order_channel_id_119898c7_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_order
+    ADD CONSTRAINT core_order_channel_id_119898c7_fk FOREIGN KEY (channel_id) REFERENCES public.core_clientchannelmap(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_order core_order_client_id_ef19d999_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_order
+    ADD CONSTRAINT core_order_client_id_ef19d999_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_orderproduct core_orderproduct_order_id_4ad40d5c_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_orderproduct
+    ADD CONSTRAINT core_orderproduct_order_id_4ad40d5c_fk FOREIGN KEY (order_id) REFERENCES public.core_order(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_orderproduct core_orderproduct_product_id_3186cb4f_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_orderproduct
+    ADD CONSTRAINT core_orderproduct_product_id_3186cb4f_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_orderproduct core_orderproduct_variant_id_b0da342b_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_orderproduct
+    ADD CONSTRAINT core_orderproduct_variant_id_b0da342b_fk FOREIGN KEY (variant_id) REFERENCES public.core_productvariant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_product core_product_client_id_66d34905_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_product
+    ADD CONSTRAINT core_product_client_id_66d34905_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_productmap core_productmap_channel_id_2cd1f3e8_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap
+    ADD CONSTRAINT core_productmap_channel_id_2cd1f3e8_fk FOREIGN KEY (channel_id) REFERENCES public.core_clientchannelmap(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_productmap core_productmap_parent_id_0640c384_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap
+    ADD CONSTRAINT core_productmap_parent_id_0640c384_fk FOREIGN KEY (parent_id) REFERENCES public.core_productmap(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_productmap core_productmap_product_id_928ac4ff_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productmap
+    ADD CONSTRAINT core_productmap_product_id_928ac4ff_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_productvariant core_productvariant_product_id_79c7de1b_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productvariant
+    ADD CONSTRAINT core_productvariant_product_id_79c7de1b_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_productvariant core_productvariant_variant_id_733f1265_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_productvariant
+    ADD CONSTRAINT core_productvariant_variant_id_733f1265_fk FOREIGN KEY (variant_id) REFERENCES public.core_variant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_service core_service_client_id_10658d86_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_service
+    ADD CONSTRAINT core_service_client_id_10658d86_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_servicing core_servicing_client_id_23a68573_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_servicing
+    ADD CONSTRAINT core_servicing_client_id_23a68573_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_servicing core_servicing_service_id_be8cafbf_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_servicing
+    ADD CONSTRAINT core_servicing_service_id_be8cafbf_fk FOREIGN KEY (service_id) REFERENCES public.core_service(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stock core_stock_product_id_361ed3d2_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stock
+    ADD CONSTRAINT core_stock_product_id_361ed3d2_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stock core_stock_variant_id_96338eb9_fk_core_productvariant_id; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stock
+    ADD CONSTRAINT core_stock_variant_id_96338eb9_fk_core_productvariant_id FOREIGN KEY (variant_id) REFERENCES public.core_productvariant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stockticket core_stockticket_created_by_id_02b9a108_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket
+    ADD CONSTRAINT core_stockticket_created_by_id_02b9a108_fk FOREIGN KEY (created_by_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stockticket core_stockticket_fulfillment_id_19ac2d86_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket
+    ADD CONSTRAINT core_stockticket_fulfillment_id_19ac2d86_fk FOREIGN KEY (fulfillment_id) REFERENCES public.core_fulfillment(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stockticket core_stockticket_product_id_190709c4_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket
+    ADD CONSTRAINT core_stockticket_product_id_190709c4_fk FOREIGN KEY (product_id) REFERENCES public.core_product(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_stockticket core_stockticket_variant_id_1b8741cf_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_stockticket
+    ADD CONSTRAINT core_stockticket_variant_id_1b8741cf_fk FOREIGN KEY (variant_id) REFERENCES public.core_productvariant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_variant core_variant_client_id_0c1a0449_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variant
+    ADD CONSTRAINT core_variant_client_id_0c1a0449_fk FOREIGN KEY (client_id) REFERENCES public.core_client(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_variantmap core_variantmap_channel_id_5c1eab38_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variantmap
+    ADD CONSTRAINT core_variantmap_channel_id_5c1eab38_fk FOREIGN KEY (channel_id) REFERENCES public.core_clientchannelmap(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_variantmap core_variantmap_variant_id_725685e0_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.core_variantmap
+    ADD CONSTRAINT core_variantmap_variant_id_725685e0_fk FOREIGN KEY (variant_id) REFERENCES public.core_productvariant(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: csvimport_importmodel csvimport_importmode_csvimport_id_5a422b1c_fk_csvimport; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvimport_importmodel
+    ADD CONSTRAINT csvimport_importmode_csvimport_id_5a422b1c_fk_csvimport FOREIGN KEY (csvimport_id) REFERENCES public.csvimport_csvimport(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: csvtests_item csvtests_item_country_id_5f8b06b9_fk_csvtests_country_code; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_item
+    ADD CONSTRAINT csvtests_item_country_id_5f8b06b9_fk_csvtests_country_code FOREIGN KEY (country_id) REFERENCES public.csvtests_country(code) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: csvtests_item csvtests_item_organisation_id_b8e10ef5_fk_csvtests_; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_item
+    ADD CONSTRAINT csvtests_item_organisation_id_b8e10ef5_fk_csvtests_ FOREIGN KEY (organisation_id) REFERENCES public.csvtests_organisation(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: csvtests_item csvtests_item_uom_id_e4b75b66_fk_csvtests_unitofmeasure_id; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.csvtests_item
+    ADD CONSTRAINT csvtests_item_uom_id_e4b75b66_fk_csvtests_unitofmeasure_id FOREIGN KEY (uom_id) REFERENCES public.csvtests_unitofmeasure(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: integrations_request integrations_request_order_id_f9361c6c_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.integrations_request
+    ADD CONSTRAINT integrations_request_order_id_f9361c6c_fk FOREIGN KEY (order_id) REFERENCES public.core_order(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_social_account_id_951f210e_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_social_account_id_951f210e_fk_socialacc FOREIGN KEY (account_id) REFERENCES public.socialaccount_socialaccount(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_social_app_id_636a42d7_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_social_app_id_636a42d7_fk_socialacc FOREIGN KEY (app_id) REFERENCES public.socialaccount_socialapp(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_social_site_id_2579dee5_fk_django_si; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_social_site_id_2579dee5_fk_django_si FOREIGN KEY (site_id) REFERENCES public.django_site(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc FOREIGN KEY (socialapp_id) REFERENCES public.socialaccount_socialapp(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_user_id_8146e70c_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_user_id_8146e70c_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: users_user_groups users_user_groups_group_id_9afc8d0e_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_groups
+    ADD CONSTRAINT users_user_groups_group_id_9afc8d0e_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: users_user_groups users_user_groups_user_id_5f6f5a90_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_groups
+    ADD CONSTRAINT users_user_groups_user_id_5f6f5a90_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: users_user_user_permissions users_user_user_perm_permission_id_0b93982e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_user_permissions
+    ADD CONSTRAINT users_user_user_perm_permission_id_0b93982e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: users_user_user_permissions users_user_user_permissions_user_id_20aca447_fk; Type: FK CONSTRAINT; Schema: public; Owner: fulfill
+--
+
+ALTER TABLE ONLY public.users_user_user_permissions
+    ADD CONSTRAINT users_user_user_permissions_user_id_20aca447_fk FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: mikekilmer
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict DHT7gCPQSldT5SyOVdkCg7rLXh0fhJDLAjrkYCv9QBFIQYL51DV5J1hRFgFfhON
+
