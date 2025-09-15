@@ -141,15 +141,21 @@ def newproducer():
     return jsonify(state)
 
 @app.route("/products/<companyid>")
+@app.route("/products")
 def products_listing(companyid=None):
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
-    ws_group = "product-"+companyid
+    ws_group =  "product-"+companyid if companyid is not None else "product-"
     state={}
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("""SELECT name, company FROM products
+    if companyid is not None:
+        statement = """SELECT name FROM products
+        where products.producer_id = %s""" % companyid
+    else:
+        statement = """SELECT name, company FROM products
         inner join producers on products.producer_id = producers.id
-        where products.producer_id = %s""", companyid)
+        ORDER BY company"""
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute(statement)
         state['products'] = [dict(c) for c in cur.fetchall()],
     return render_template("products.html", state=state, user=current_user, ws_group=ws_group)
 
@@ -204,11 +210,16 @@ def newproduct():
 
 def get_state(group):
     state = {}
-    if group.startswith("product-"):
-      with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-          cur.execute("""SELECT name, company FROM products
+    if group.startswith("product"):
+      if group.split("-")[1] != '':
+          statement = """SELECT name FROM products
+            where products.producer_id = %s""" % group.split("-")[1]
+      else:
+          statement = """SELECT name, company FROM products
             inner join producers on products.producer_id = producers.id
-            where products.producer_id = %s""", (group.split("-")[1]))
+            ORDER BY company"""
+      with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+          cur.execute(statement)
           state['products'] = cur.fetchall()
     else:
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:

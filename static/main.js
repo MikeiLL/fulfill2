@@ -21,7 +21,8 @@ export function render(state) {
       FORM({id: "newproduct"}, (
         TABLE(TBODY([
             state.products.map((p, idx) => TR({'data-idx': idx}, [
-              TH(p.name), TD(BUTTON({'data-id': p.id, type: "button", class: "delete", 'data-endpoint': 'deleteproduct' },"x"))
+              TH([p.name, p.company ? ` (${p.company})` : '']),
+              TD(BUTTON({'data-id': p.id, type: "button", class: "delete", 'data-endpoint': 'deleteproduct'}, "x"))
             ])),
             TR({class: "productinputrow"},[
                 TH([
