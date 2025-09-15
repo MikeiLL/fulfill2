@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+
+#indexbox {
+  padding: 10em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+}
+
+label {
+  margin: 0 1em;
+  display: inline-flex;
+  gap: 0.5em;
+  flex-direction: row;
+  align-items: center;
+}
+
+#indexbox figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+#indexbox figure caption {
+  text-align: center;
+}
+
+#indexbox figure figcaption a {
+  display: inline-block;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 0.5em;
+}
+
+textarea#cfgs {
+  height: 10em;
+  width: 20em;
+  background: #bbbbbb;
+}

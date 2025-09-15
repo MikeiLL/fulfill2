@@ -1,7 +1,3 @@
--- Table names are flush left, and column definitions are
--- indented by at least one space or tab. Blank lines and
--- lines beginning with a double hyphen are comments.
-
 producers
   id serial primary key
   company varchar

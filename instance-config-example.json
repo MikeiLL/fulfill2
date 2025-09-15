@@ -1,0 +1,24 @@
+{
+	"pgsql_connection_string": "pgsql://user:pass@mysql-test.oreninternational.com:3306/database",
+	"pdftempdir": "/tmp/yours-pdf-",
+	"uberfreight": {
+		"client_secret": "xxxxxx",
+		"api_token": "IA.xxxx",
+		"application_id": "xxx"
+	},
+	"estes": {
+		"acctno": 4460216,
+		"apikey-prod": "xxxxxx",
+		"clientid-prod": "xxxxxx",
+		"clientsecret-prod": "xxxxxx",
+		"apikey-uat": "xxxxxx",
+		"clientid-uat": "xxxxxx",
+		"clientsecret-uat": "xxxxxx",
+		"user": "xxxxxx",
+		"password": "xxxxxx"
+	},
+	"sendgrid": {
+		"api_key": "SG.xxxxx",
+		"domain": "example.com"
+	}
+}
