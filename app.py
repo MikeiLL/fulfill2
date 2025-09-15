@@ -81,8 +81,8 @@ def logout():
 def producers():
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
-    ws_group = "producers"
-    return render_template("socket.html", user=current_user, ws_group=ws_group)
+    ws_type = "producers"
+    return render_template("socket.html", user=current_user, ws_type=ws_type, ws_group='')
 
 
 
@@ -141,8 +141,9 @@ def newproducer():
 def products_listing(companyid=None):
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
-    ws_group =  "product-"+companyid if companyid is not None else "product-"
-    return render_template("socket.html", user=current_user, ws_group=ws_group)
+    ws_group = companyid if companyid is not None else ""
+    ws_type = 'products'
+    return render_template("socket.html", user=current_user, ws_type=ws_type, ws_group=ws_group)
 
 @app.route('/deleteproduct', methods=['POST'])
 def deleteproduct():
@@ -195,15 +196,16 @@ def newproduct():
 def options():
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
-    ws_group = "options"
-    return render_template("socket.html", user=current_user, ws_group=ws_group)
+    ws_type = 'options'
+    return render_template("socket.html", user=current_user, ws_type=ws_type, ws_group='')
 
-def get_state(group):
+def get_state(type, group):
+    # TODO modularize based on ws_type
     state = {}
-    if group.startswith("product"):
-      if group.split("-")[1] != '':
+    if type == 'products':
+      if group:
         statement = """SELECT name FROM products
-        where products.producer_id = %s""" % group.split("-")[1]
+        where products.producer_id = %s""" % group
       else:
         statement = """SELECT name, company FROM products
           inner join producers on products.producer_id = producers.id
@@ -211,7 +213,7 @@ def get_state(group):
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
           cur.execute(statement)
           state['products'] = cur.fetchall()
-    elif group == 'options':
+    elif type == 'options':
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute("SELECT id, name, config FROM options ORDER BY name")
         state['options'] = cur.fetchall()
@@ -222,10 +224,10 @@ def get_state(group):
         state['producers'] = cur.fetchall()
     return state
 
-def update_sockets(group, state = None):
+def update_sockets(type, group, state = None):
     if state is None:
         try:
-          state = { **get_state(group), "cmd": "update" } # "unpack" (spread) and add "cmd"
+          state = { **get_state(type, group), "cmd": "update" } # "unpack" (spread) and add "cmd"
         except Exception as e:
           state = { "error": str(e) }
     state = json.dumps(state, cls=DateTimeEncoder)
