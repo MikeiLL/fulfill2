@@ -32,3 +32,20 @@ stock
   count smallint
   product_id int references products
   option_id int references options
+
+fulfillments
+  id serial primary key
+  received timestamptz not null default now()
+  provider varchar
+  fulfilled timestamptz
+  orderdetails jsonb not null
+  materials jsonb not null
+  services jsonb not null
+
+services
+  id serial primary key
+  name varchar not null
+  description varchar
+  cost smallint not null default 0
+  unit varchar not null default 'hr' -- eg hr, piece, box, case
+  enabled boolean not null default true
