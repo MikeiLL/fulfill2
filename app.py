@@ -82,11 +82,7 @@ def producers():
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
     ws_group = "producers"
-    state={}
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("SELECT id, company, email, phone FROM producers")
-        state['producers'] = [dict(c) for c in cur.fetchall()],
-    return render_template("producers.html", state=state, user=current_user, ws_group=ws_group)
+    return render_template("socket.html", user=current_user, ws_group=ws_group)
 
 
 
@@ -146,18 +142,7 @@ def products_listing(companyid=None):
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
     ws_group =  "product-"+companyid if companyid is not None else "product-"
-    state={}
-    if companyid is not None:
-        statement = """SELECT name FROM products
-        where products.producer_id = %s""" % companyid
-    else:
-        statement = """SELECT name, company FROM products
-        inner join producers on products.producer_id = producers.id
-        ORDER BY company"""
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute(statement)
-        state['products'] = [dict(c) for c in cur.fetchall()],
-    return render_template("products.html", state=state, user=current_user, ws_group=ws_group)
+    return render_template("socket.html", user=current_user, ws_group=ws_group)
 
 @app.route('/deleteproduct', methods=['POST'])
 def deleteproduct():
@@ -211,11 +196,7 @@ def options():
     if not (current_user and hasattr(current_user, 'user_level')):
         return redirect("/")
     ws_group = "options"
-    state={}
-    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-        cur.execute("SELECT id, name, config FROM options")
-        state['options'] = [dict(c) for c in cur.fetchall()],
-    return render_template("options.html", state=state, user=current_user, ws_group=ws_group)
+    return render_template("socket.html", user=current_user, ws_group=ws_group)
 
 def get_state(group):
     state = {}
