@@ -202,12 +202,13 @@ def options():
 def get_state(type, group):
     # TODO modularize based on ws_type
     state = {}
+    print("got type %s" % type)
     if type == 'products':
       if group:
         statement = """SELECT name FROM products
         where products.producer_id = %s""" % group
       else:
-        statement = """SELECT name, company FROM products
+        statement = """SELECT id, name, company FROM products
           inner join producers on products.producer_id = producers.id
           ORDER BY company"""
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
@@ -264,7 +265,7 @@ def websocket(ws):
                 continue
             # Init is called automatically on connection
             if message["cmd"] == "init":  # Initialize a new socket
-                if message["type"] != "admin":
+                if message["type"] not in ["products", "options", "producers"]:
                     continue
                 if "group" not in message:
                     continue
@@ -272,7 +273,7 @@ def websocket(ws):
                 ws_groups[group].append(ws)
             if message["cmd"] == "init" or message["cmd"] == "refresh":
                 state = { "cmd": "update",
-                    **get_state(group)
+                    **get_state(message["type"], group)
                 }
                 ws.send(json.dumps(state, cls=DateTimeEncoder))
             if message["cmd"] in socket_commands:

@@ -21,6 +21,7 @@ products
   id serial primary key
   name varchar
   producer_id int references producers
+  options_id int references options
 
 options
   id serial primary key

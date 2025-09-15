@@ -1,13 +1,14 @@
 import {
-    lindt,
-    choc,
-    replace_content,
-    on,
-    DOM,
+  lindt,
+  choc,
+  replace_content,
+  on,
+  DOM,
+  apply_fixes,
 } from "https://rosuav.github.io/choc/factory.js";
 const {A, BUTTON, FORM, INPUT, LABEL, P, SPAN, TABLE, TBODY, TD, TH, TR, TEXTAREA} = lindt; //autoimport
 import {simpleconfirm} from "./utils.js";
-
+apply_fixes({methods: 1});
 export function render(state) {
   if (state.error) {
     replace_content("#mainflashdlg>header", "Oops!");
@@ -17,21 +18,24 @@ export function render(state) {
   }
   console.log(state);
   if (state.products) {
+    let defaultoptions = {
+      colors: ["red", "orange", "green", "blue", "green", "indigo", "violet"],
+      sizes: ["small", "medium", "large"]
+    }
     return replace_content("main", [
-      FORM({id: "newproduct"}, (
-        TABLE(TBODY([
-            state.products.map((p, idx) => TR({'data-idx': idx}, [
-              TH([p.name, p.company ? ` (${p.company})` : '']),
+      FORM({id: "productlist"},TABLE(TBODY([
+            state.products.map((p, idx) => TR({'data-id': p.id, 'data-idx': idx}, [
+              TH([INPUT({name: 'productname', value: p.name || 'error'}), p.company ? ` (${p.company})` : '']),
+              TD(TEXTAREA({value: JSON.stringify(p.options || defaultoptions, null, 2)} )),
               TD(BUTTON({'data-id': p.id, type: "button", class: "delete", 'data-endpoint': 'deleteproduct'}, "x"))
             ])),
-            TR({class: "productinputrow"},[
-                TH([
-                    LABEL([SPAN("name"), INPUT({type: "text", name: "name", autocomplete: "off"})])
-                ]), TD(
-                    BUTTON({id: "btnnew", type: "submit"}, "new")
-                )])
-        ])))), // end form
-    ]);
+        ]))),
+
+        FORM({id: "newproduct", class: "productinputrow"},[
+          LABEL([SPAN("name"), INPUT({type: "text", name: "name", autocomplete: "off"})]),
+          BUTTON({id: "btnnew", type: "submit"}, "new")
+        ]),
+    ])
   }
   else if (state.options) {
     console.log(Object.entries(state.options[1].config))
@@ -93,3 +97,18 @@ on("click", ".delete", simpleconfirm("Delete producer?", async (e) => {
         }),
     })
 }))
+
+on("change", "#productlist textarea", (e) => {
+  console.log(e.match.closest_data("id"));
+  return;
+  fetch(`/${e.match.dataset.endpoint}`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: e.match.closest("tr").dataset.id,
+        group: ws_group,
+      }),
+  })
+});
