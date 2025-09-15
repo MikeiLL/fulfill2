@@ -5,7 +5,7 @@ import {
     on,
     DOM,
 } from "https://rosuav.github.io/choc/factory.js";
-const {A, BUTTON, FORM, INPUT, LABEL, P, SPAN, TABLE, TBODY, TD, TH, TR} = lindt; //autoimport
+const {A, BUTTON, FORM, INPUT, LABEL, P, SPAN, TABLE, TBODY, TD, TH, TR, TEXTAREA} = lindt; //autoimport
 import {simpleconfirm} from "./utils.js";
 
 export function render(state) {
@@ -32,7 +32,16 @@ export function render(state) {
                 )])
         ])))), // end form
     ]);
-  } else return replace_content("main", [
+  }
+  else if (state.options) {
+    console.log(Object.entries(state.options[1].config))
+    return replace_content("main", state.options.map(o => P({style: "display: flex; gap: 1em;"},[
+      o.name,
+      //Object.entries(o.config).map(([k, v]) => [SPAN(k), ": ", +v]),
+      TEXTAREA(JSON.stringify(o.config))
+    ])))
+  }
+  else return replace_content("main", [
         FORM({id: "newproducer"}, (
         TABLE(TBODY([
             state.producers.map((c, idx) => TR({'data-idx': idx}, [

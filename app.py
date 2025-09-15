@@ -159,8 +159,6 @@ def products_listing(companyid=None):
         state['products'] = [dict(c) for c in cur.fetchall()],
     return render_template("products.html", state=state, user=current_user, ws_group=ws_group)
 
-
-
 @app.route('/deleteproduct', methods=['POST'])
 def deleteproduct():
     if (current_user.user_level != 3):
@@ -208,19 +206,35 @@ def newproduct():
     update_sockets(data['group'])
     return jsonify(state)
 
+@app.route("/options")
+def options():
+    if not (current_user and hasattr(current_user, 'user_level')):
+        return redirect("/")
+    ws_group = "options"
+    state={}
+    with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute("SELECT id, name, config FROM options")
+        state['options'] = [dict(c) for c in cur.fetchall()],
+    return render_template("options.html", state=state, user=current_user, ws_group=ws_group)
+
 def get_state(group):
     state = {}
     if group.startswith("product"):
       if group.split("-")[1] != '':
-          statement = """SELECT name FROM products
-            where products.producer_id = %s""" % group.split("-")[1]
+        statement = """SELECT name FROM products
+        where products.producer_id = %s""" % group.split("-")[1]
       else:
-          statement = """SELECT name, company FROM products
-            inner join producers on products.producer_id = producers.id
-            ORDER BY company"""
+        statement = """SELECT name, company FROM products
+          inner join producers on products.producer_id = producers.id
+          ORDER BY company"""
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
           cur.execute(statement)
           state['products'] = cur.fetchall()
+    elif group == 'options':
+      with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+        cur.execute("SELECT id, name, config FROM options ORDER BY name")
+        state['options'] = cur.fetchall()
+        state['options']
     else:
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute("SELECT id, company, email, phone, web FROM producers ORDER BY company")
