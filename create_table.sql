@@ -8,7 +8,7 @@ producers
   email varchar unique
   phone varchar unique
   web varchar
-  CONSTRAINT at_least_one_contact_point CHECK (COALESCE((email != '') OR (phone != '') OR (web != ''), FALSE))
+##CONSTRAINT at_least_one_contact_point CHECK (COALESCE((email != '') OR (phone != '') OR (web != ''), FALSE))
 
 users
   id serial primary key
@@ -22,7 +22,13 @@ products
   name varchar
   producer_id int references producers
 
+options
+  id serial primary key
+  name varchar
+  config jsonb
+
 stock
   id serial primary key
   count smallint
   product_id int references products
+  option_id int references options

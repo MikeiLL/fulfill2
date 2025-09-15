@@ -96,17 +96,24 @@ def tables(*, confirm=False):
     """
     tb = None; cols = {}; coldefs = []
     with _conn, _conn.cursor() as cur:
+        messages = []
         def finish():
             if tb and (coldefs or cols):
                 if is_new == "": query = "create table "+tb+" ("+", ".join(coldefs)+")"
                 else:
                     parts = coldefs + ["drop "+c for c in cols]
                     query = "alter table "+tb+" "+", ".join(parts)
-                if confirm: cur.execute(query)
+                if confirm:
+                  try: cur.execute(query)
+                  except psycopg2.errors.DuplicateObject as e:
+                    messages.append(str(e))
                 else: print(query)
         for line in open("create_table.sql"):
             line = line.rstrip()
             if line == "" or line.startswith("--"): continue
+            if line.startswith("##"):
+                messages.append(line[2:])
+                continue
             # Flush-left lines are table names
             if line == line.lstrip():
                 finish()
@@ -141,7 +148,11 @@ def tables(*, confirm=False):
                 # Note that we include a newline here so that a comment will be properly terminated.
                 # If you look at the query, it'll have all its commas oddly placed, but that's okay.
                 coldefs.append("%s %s %s\n" % (is_new, colname, defn))
-        finish()
+        if len(messages) != 0:
+            print("If you haven't yet you may need to add some constraints:")
+            from pprint import pprint
+            pprint(messages)
+        else: finish()
     if not confirm: print("Add --confirm to actually make the changes.")
 
 if __name__ == "__main__":
