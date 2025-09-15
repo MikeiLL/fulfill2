@@ -206,9 +206,9 @@ def get_state(group):
     state = {}
     if group.startswith("product-"):
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
-          cur.execute("""SELECT prod.id, prod.name, producer.company FROM products prod
-                      INNER JOIN producers producer on prod.producer_id = producer.id
-                      ORDER BY company""")
+          cur.execute("""SELECT name, company FROM products
+            inner join producers on products.producer_id = producers.id
+            where products.producer_id = %s""", (group.split("-")[1]))
           state['products'] = cur.fetchall()
     else:
       with _conn, _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
