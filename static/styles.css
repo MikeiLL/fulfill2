@@ -1,0 +1,147 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --brand-primary: #e18d10;
+  --brand-primary-dark: #6a4906;
+  --brand-secondary: #0baad6;
+  --brand-secondary-dark: #09728f;
+  --black: #000000;
+  --white: #FEFEFE;
+}
+
+.normal-submission-state {
+  background-color: var(--normal-submission-state);
+}
+
+.nearing-submission-deadline {
+  background-color: var(--nearing-submission-deadline);
+}
+
+.past-submission-deadline {
+  background-color: var(--past-submission-deadline);
+}
+
+.committed {
+  background-color: var(--brand-secondary-dark);
+}
+
+header,
+footer {
+  background-color: var(--brand-primary-dark);
+  color: var(--white);
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+footer {
+  margin-top: 1em;
+}
+
+#branding_nav {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  font-weight: bold;
+}
+
+#branding_nav a {
+  color: var(--white);
+  text-decoration: none;
+}
+
+#branding_nav a:hover {
+  color: var(--brand-secondary-dark);
+  text-decoration: none;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1em;
+}
+
+section {
+  margin-bottom: 1em;
+}
+
+.branding {
+  display: flex;
+}
+
+.btn,
+button {
+  background-color: var(--brand-secondary-dark);
+  color: var(--white);
+  padding: 0.2em 1em;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: var(--brand-primary-dark);
+  color: var(--black);
+}
+
+.btn-clear {
+  width: 100%;
+  padding: 1em;
+  margin: 1em 0;
+  font-size: 1.2em;
+  font-weight: bold;
+  background: var(--white);
+  border: 2px solid var(--brand-secondary-dark);
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--brand-secondary-dark);
+}
+
+#simpleconfirmdlg {
+  min-width: 500px;
+}
+
+#simpleconfirmdlg footer {
+  display: flex;
+  justify-content: space-around;
+  background: none;
+  border-top: 1px solid var(--brand-primary-dark);
+}
+
+#simpleconfirmdlg header {
+  background: var(--brand-primary);
+  border-bottom: 1px solid var(--brand-primary-dark);
+  padding: 0.5em;
+}
+
+/* Contacts Listing */
+tr::before {
+  content: attr(data-idx);
+  color: grey;
+}
+
+/* TABLES */
+table,
+th,
+td {
+  border: 1px solid grey;
+  text-align: left;
+}
+
+.contactinputrow label,
+.contactinputrow label {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+}
+
+.contactinputrow label span {
+  font-size: smaller;
+  color: var(--brand-secondary-dark);
+}

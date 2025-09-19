@@ -15,7 +15,7 @@ __async__ mapping get_state(string|int group, string|void id, string|void type) 
     SELECT * FROM producers;
   "));
   if (!sizeof(producers)) return 0;
-  return (['producers': producers]);
+  return (["producers": producers]);
 }
 
 void websocket_cmd_hello(mapping(string:mixed) conn, mapping(string:mixed) msg) {

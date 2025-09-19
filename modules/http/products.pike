@@ -11,11 +11,11 @@ mapping(string:mixed)|Concurrent.Future http_request(Protocols.HTTP.Server.Reque
 }
 
 __async__ mapping get_state(string|int group, string|void id, string|void type) {
-  array(mapping) producers = await(G->G->DB->run_query(#"
-    SELECT * FROM producers;
+  array(mapping) data = await(G->G->DB->run_query(#"
+    SELECT * FROM products;
   "));
-  if (!sizeof(producers)) return 0;
-  return (['producers': producers]);
+  if (!sizeof(data)) return 0;
+  return (["products": data]);
 }
 
 void websocket_cmd_hello(mapping(string:mixed) conn, mapping(string:mixed) msg) {

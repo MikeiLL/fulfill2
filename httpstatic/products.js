@@ -17,28 +17,24 @@ export function render(state) {
     DOM("#mainflashdlg").showModal();
     return;
   }
+  let defaultoptions = {
+    colors: ["red", "orange", "green", "blue", "green", "indigo", "violet"],
+    sizes: ["small", "medium", "large"]
+  }
   return replace_content("main", [
-    FORM({id: "newproducer"}, (
-    TABLE(TBODY([
-        state.producers.map((c, idx) => TR({'data-idx': idx}, [
-          TH([A({href: `/products/${c.id}`}, c.company), ` (${c.id})`]),
-          TD(c.email), TD(c.phone), TD(c.web),
-          TD(BUTTON({'data-id': c.id, type: "button", class: "delete", 'data-endpoint': 'deleteproducer'}, "x"))
-        ])),
-        TR({class: "producerinputrow"},[
-            TH([
-                LABEL([SPAN("company"), INPUT({type: "text", name: "company", autocomplete: "off"})])
-            ]), TD(
-                LABEL([SPAN("email"), INPUT({type: "text", name: "email", autocomplete: "off", type: "email"})])
-            ), TD(
-                LABEL([SPAN("phone"), INPUT({type: "text", name: "phone", autocomplete: "off"})])
-            ), TD(
-                LABEL([SPAN("web"), INPUT({type: "text", name: "web", autocomplete: "off"})])
-            ), TD(
-                BUTTON({id: "btnnew", type: "submit"}, "new")
-            )])
-    ])))), // end form
-    ]);
+    FORM({id: "productlist"},TABLE(TBODY([
+          state.products.map((p, idx) => TR({'data-id': p.id, 'data-idx': idx}, [
+            TH([INPUT({name: 'productname', value: p.name || 'error'}), p.company ? ` (${p.company})` : '']),
+            TD(TEXTAREA({value: JSON.stringify(p.options || defaultoptions, null, 2)} )),
+            TD(BUTTON({'data-id': p.id, type: "button", class: "delete", 'data-endpoint': 'deleteproduct'}, "x"))
+          ])),
+      ]))),
+
+      FORM({id: "newproduct", class: "productinputrow"},[
+        LABEL([SPAN("name"), INPUT({type: "text", name: "name", autocomplete: "off"})]),
+        BUTTON({id: "btnnew", type: "submit"}, "new")
+      ]),
+  ]);
 }
 on("click", "#btnnew", async (e) => {
     e.preventDefault();
