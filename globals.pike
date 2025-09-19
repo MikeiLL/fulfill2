@@ -286,8 +286,8 @@ class websocket_handler {
 	//Override to validate any init requests. Return 0 to allow the socket
 	//establishment, or an error message.
 	string websocket_validate(mapping(string:mixed) conn, mapping(string:mixed) msg) {
-		string login = conn->session->?user->?email;
-		if (!login && need_login(msg->group)) return "Not logged in. Reload the page to try again.";
+		//string login = conn->session->?user->?email;
+		//if (!login && need_login(msg->group)) return "Not logged in. Reload the page to try again.";
 	}
 
 //Handle potentially-asynchronous results. Can be used to paper over a distinction between
