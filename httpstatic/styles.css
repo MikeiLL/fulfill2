@@ -37,6 +37,11 @@ footer {
   justify-content: space-between;
 }
 
+header a,
+footer a {
+  color: var(----white);
+}
+
 footer {
   margin-top: 1em;
 }
