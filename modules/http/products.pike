@@ -18,8 +18,8 @@ __async__ mapping get_state(string|int group, string|void id, string|void type) 
   return (["products": data]);
 }
 
-void websocket_cmd_hello(mapping(string:mixed) conn, mapping(string:mixed) msg) {
-
+void websocket_cmd_product_options(mapping(string:mixed) conn, mapping(string:mixed) msg) {
+  werror("message: %O\n", msg);
   send_updates_all(conn->group);
 }
 

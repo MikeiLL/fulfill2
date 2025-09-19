@@ -54,7 +54,7 @@ on("click", "#btnnew", async (e) => {
 
 on("click", ".delete", simpleconfirm("Delete producer?", async (e) => {
     e.preventDefault();
-    fetch(`/${e.match.dataset.endpoint}`, {
+    fetch(`/products`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -67,16 +67,8 @@ on("click", ".delete", simpleconfirm("Delete producer?", async (e) => {
 }))
 
 on("change", "#productlist textarea", (e) => {
-  console.log(e.match.closest_data("id"));
-  return;
-  fetch(`/${e.match.dataset.endpoint}`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: e.match.closest("tr").dataset.id,
-        group: ws_group,
-      }),
-  })
+  ws_sync.send({
+    "cmd": "product_options",
+    "option": e.match.value,
+  });
 });
