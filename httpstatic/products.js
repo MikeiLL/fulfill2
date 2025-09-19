@@ -69,6 +69,7 @@ on("click", ".delete", simpleconfirm("Delete producer?", async (e) => {
 on("change", "#productlist textarea", (e) => {
   ws_sync.send({
     "cmd": "product_options",
-    "option": e.match.value,
+    "option": JSON.stringify(e.match.value),
+    "id": e.match.closest('tr').dataset.id,
   });
 });

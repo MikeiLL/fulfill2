@@ -20,6 +20,9 @@ __async__ mapping get_state(string|int group, string|void id, string|void type) 
 
 void websocket_cmd_product_options(mapping(string:mixed) conn, mapping(string:mixed) msg) {
   werror("message: %O\n", msg);
+  /* array(mapping) data = await(G->G->DB->run_query(#"
+    INSERT INTO PRODUCTS () VALUES () WHERE id = ;
+  ", msg->id)); */
   send_updates_all(conn->group);
 }
 
